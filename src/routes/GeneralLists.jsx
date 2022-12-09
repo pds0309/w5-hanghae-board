@@ -1,16 +1,17 @@
 import React from "react";
 import styled from "styled-components";
+import Section from "../components/layout/Section";
 
 const GeneralLists = () => {
   return (
-    <StContainer>
+    <Section>
       <StHeader>
         <StH1>전체글 목록</StH1>
       </StHeader>
       <hr />
       <div>
         <div>
-          <StP fontSize="26px">리스트는 몇글자까지 간으한가</StP>
+          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
           <StSpaceBtw>
             <StP>리스트1</StP>
             <StP>2022/12/09/ 00: 00</StP>
@@ -18,7 +19,7 @@ const GeneralLists = () => {
           <hr />
         </div>
         <div>
-          <StP fontSize="26px">리스트는 몇글자까지 간으한가</StP>
+          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
           <StSpaceBtw>
             <StP>리스트1</StP>
             <StP>2022/12/09/ 00: 00</StP>
@@ -26,7 +27,7 @@ const GeneralLists = () => {
           <hr />
         </div>
         <div>
-          <StP fontSize="26px">리스트는 몇글자까지 간으한가</StP>
+          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
           <StSpaceBtw>
             <StP>리스트1</StP>
             <StP>2022/12/09/ 00: 00</StP>
@@ -34,7 +35,7 @@ const GeneralLists = () => {
           <hr />
         </div>
         <div>
-          <StP fontSize="26px">리스트는 몇글자까지 간으한가</StP>
+          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
           <StSpaceBtw>
             <StP>리스트1</StP>
             <StP>2022/12/09/ 00: 00</StP>
@@ -42,7 +43,7 @@ const GeneralLists = () => {
           <hr />
         </div>
         <div>
-          <StP fontSize="26px">리스트는 몇글자까지 간으한가</StP>
+          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
           <StSpaceBtw>
             <StP>리스트1</StP>
             <StP>2022/12/09/ 00: 00</StP>
@@ -50,7 +51,7 @@ const GeneralLists = () => {
           <hr />
         </div>
         <div>
-          <StP fontSize="26px">리스트는 몇글자까지 간으한가</StP>
+          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
           <StSpaceBtw>
             <StP>리스트1</StP>
             <StP>2022/12/09/ 00: 00</StP>
@@ -58,7 +59,7 @@ const GeneralLists = () => {
           <hr />
         </div>
         <div>
-          <StP fontSize="26px">리스트는 몇글자까지 간으한가</StP>
+          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
           <StSpaceBtw>
             <StP>리스트1</StP>
             <StP>2022/12/09/ 00: 00</StP>
@@ -76,15 +77,9 @@ const GeneralLists = () => {
         </>
         <p>{` >`}</p>
       </StPaging>
-    </StContainer>
+    </Section>
   );
 };
-
-const StContainer = styled.div`
-  max-width: 1160px;
-  width: 95%;
-  margin: 0 auto;
-`;
 
 const StHeader = styled.div`
   display: flex;
@@ -100,7 +95,7 @@ const StH1 = styled.h1`
 `;
 
 const StP = styled.p`
-  font-size: ${(prop) => prop.fontSize || "16px"};
+  font-size: ${(prop) => prop.fontSize || "14px"};
   margin: 15px 0 0;
 
   /* overflow: hidden; */
