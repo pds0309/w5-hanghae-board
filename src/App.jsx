@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import GeneralLists from "./routes/GeneralLists";
 
 import Header from "./components/layout/Header";
 
@@ -8,7 +9,9 @@ function App() {
     <>
       <Header />
       <BrowserRouter>
-        <Routes></Routes>
+        <Routes>
+          <Route exact path="/" element={<GeneralLists />} />
+        </Routes>
       </BrowserRouter>
     </>
   );
