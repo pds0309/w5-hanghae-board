@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PostRegister from "./routes/PostRegister";
 
 import Header from "./components/layout/Header";
 
@@ -8,7 +9,9 @@ function App() {
     <>
       <Header />
       <BrowserRouter>
-        <Routes></Routes>
+        <Routes>
+          <Route path="/regist" element={<PostRegister />} />
+        </Routes>
       </BrowserRouter>
     </>
   );
