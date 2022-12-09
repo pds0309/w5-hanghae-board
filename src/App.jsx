@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import Detail from "./routes/Detail";
 import Header from "./components/layout/Header";
 
 function App() {
@@ -8,7 +9,9 @@ function App() {
     <>
       <Header />
       <BrowserRouter>
-        <Routes></Routes>
+        <Routes>
+          <Route exact path="/:id" element={<Detail />}></Route>
+        </Routes>
       </BrowserRouter>
     </>
   );
