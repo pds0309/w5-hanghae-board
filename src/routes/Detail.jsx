@@ -12,9 +12,9 @@ const Detail = () => {
         <PostDetail />
         {/* #################################### 댓글등록 ################################ */}
         <br />
-        <CommentSubmit />
+        <CommentSubmit postId="1" />
         {/* #################################### 댓글목록 ################################ */}
-        <CommentList />
+        <CommentList postId="1" />
       </StContainer>
     </Section>
   );

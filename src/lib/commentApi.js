@@ -1,15 +1,48 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-// 예시
-// export const __getTodos = createAsyncThunk(
-//   "getTodos",
-//   async (payload, thunkAPI) => {
-//     try {
-//       const response = await axios.get("http://localhost:3001/todos");
-//       return thunkAPI.fulfillWithValue(response.data);
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(error);
-//     }
-//   }
-// );
+// 댓글 목록 조회
+export const __getComments = createAsyncThunk(
+  "getComments",
+  async (payload, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/comments/?postId=${payload}`
+      );
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// 댓글 조회
+export const __getCommentById = createAsyncThunk(
+  "getCommentById",
+  async (payload, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/comments/${payload}`
+      );
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// 댓글 등록
+export const __addComments = createAsyncThunk(
+  "addComments",
+  async (payload, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/comments",
+        payload
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
