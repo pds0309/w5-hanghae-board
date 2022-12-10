@@ -32,13 +32,28 @@ export const __getCommentById = createAsyncThunk(
 );
 
 // 댓글 등록
-export const __addComments = createAsyncThunk(
-  "addComments",
+export const __addComment = createAsyncThunk(
+  "addComment",
   async (payload, thunkAPI) => {
     try {
       const response = await axios.post(
         "http://localhost:3001/comments",
         payload
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// 댓글 삭제
+export const __removeComment = createAsyncThunk(
+  "removeComment",
+  async (payload, thunkAPI) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3001/comments/${payload}`
       );
       return response.data;
     } catch (error) {

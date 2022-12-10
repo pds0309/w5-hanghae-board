@@ -5,7 +5,7 @@ import styled from "styled-components";
 import uuid from "react-uuid";
 import { useDispatch } from "react-redux";
 import { addComment } from "../../redux/modules/commentSlice";
-import { __addComments } from "../../lib/commentApi";
+import { __addComment } from "../../lib/commentApi";
 import useInput from "../../hooks/useInput";
 
 const CommentSubmit = ({ postId }) => {
@@ -24,13 +24,17 @@ const CommentSubmit = ({ postId }) => {
       password,
       createdAt: dateFormatGenerator(),
     };
-    dispatch(__addComments(newComment))
+    // 댓글 등록 API 요청
+    dispatch(__addComment(newComment))
       .then((response) => {
         const comment = response.payload;
         dispatch(addComment(comment));
+        // 입력 폼 초기화
         setUserId("");
         setPassword("");
         setComment("");
+        // TODO: 컴포넌트로 alert창 만들기
+        alert("댓글 작성이 정상적으로 되었습니다.");
       })
       .catch((error) => {
         throw error;
