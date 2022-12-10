@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
-import Section from "../components/layout/Section";
-import { __getPosts } from "../redux/modules/postSlice";
+
 import { Link } from "react-router-dom";
+import Section from "../components/layout/Section";
+import { __getPosts } from "../lib/postApi";
+import styled from "styled-components";
 
 const GeneralLists = () => {
   const { error, isLoading, posts } = useSelector((store) => store.posts);
