@@ -1,4 +1,9 @@
-import { __getPostById, __getPosts, __updatePost } from "../../lib/postApi";
+import {
+  __deletePost,
+  __getPostById,
+  __getPosts,
+  __updatePost,
+} from "../../lib/postApi";
 
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -46,6 +51,17 @@ export const postSlice = createSlice({
       state.post = { ...state.post, ...action.payload };
     },
     [__updatePost.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__deletePost.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [__deletePost.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.post = null;
+    },
+    [__deletePost.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
