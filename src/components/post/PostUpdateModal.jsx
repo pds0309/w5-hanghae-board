@@ -12,7 +12,7 @@ const PostUpdateModal = ({ onClose, visible, id, title, content }) => {
   const [password, , changePassword] = useInput("");
   const dispatch = useDispatch();
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!inputTitle || !inputContent) {
       alert("제목 또는 내용을 입력하세요");
       return;
@@ -21,7 +21,7 @@ const PostUpdateModal = ({ onClose, visible, id, title, content }) => {
       alert("비밀번호를 입력하세요");
       return;
     }
-    await dispatch(
+    dispatch(
       __updatePost({
         id: id,
         title: inputTitle,
@@ -46,7 +46,7 @@ const PostUpdateModal = ({ onClose, visible, id, title, content }) => {
         value={inputTitle}
         onChange={(e) => changeInputTitle(e)}
       />
-      <StLabel>비밀번호 입력</StLabel>{" "}
+      <StLabel>비밀번호 입력</StLabel>
       <Input
         type="password"
         placeholder="비밀번호를 입력하세요"
