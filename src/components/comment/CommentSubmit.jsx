@@ -2,25 +2,75 @@ import Button from "../common/Button";
 import { Colors } from "../../styles";
 import Input from "../common/Input";
 import styled from "styled-components";
+import uuid from "react-uuid";
+import { useDispatch } from "react-redux";
+import { addComment } from "../../redux/modules/commentSlice";
+import { __addComments } from "../../lib/commentApi";
+import useInput from "../../hooks/useInput";
 
-const CommentSubmit = () => {
+const CommentSubmit = ({ postId }) => {
+  const dispatch = useDispatch();
+  const [userId, setUserId, onChangeUserId] = useInput("");
+  const [password, setPassword, onChangePassword] = useInput("");
+  const [comment, setComment, onChangeComment] = useInput("");
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    const newComment = {
+      id: uuid(),
+      postId,
+      comment,
+      userId,
+      password,
+      createdAt: dateFormatGenerator(),
+    };
+    dispatch(__addComments(newComment))
+      .then((response) => {
+        const comment = response.payload;
+        dispatch(addComment(comment));
+        setUserId("");
+        setPassword("");
+        setComment("");
+      })
+      .catch((error) => {
+        throw error;
+      });
+  };
+
   return (
     <div style={{ marginBottom: "60px" }}>
-      <form>
+      <form onSubmit={onSubmit}>
         <StSectionInfo>댓글등록</StSectionInfo>
         <StHorizonRule />
         <StInputsContainer>
           <StInputBox>
             <label>닉네임:</label>
-            <Input type="text" placeholder="닉네임을 입력하세요" />
+            <Input
+              type="text"
+              placeholder="닉네임을 입력하세요"
+              value={userId}
+              onChange={onChangeUserId}
+              required
+            />
           </StInputBox>
           <StInputBox>
             <label>비밀번호:</label>
-            <Input type="password" placeholder="비밀번호를 입력하세요" />
+            <Input
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              value={password}
+              onChange={onChangePassword}
+              required
+            />
           </StInputBox>
         </StInputsContainer>
         <div>
-          <StTextArea placeholder="댓글을 입력하세요" />
+          <StTextArea
+            placeholder="댓글을 입력하세요"
+            value={comment}
+            onChange={onChangeComment}
+            required
+          />
         </div>
         <div>
           <Button type="submit">등록하기</Button>
@@ -28,6 +78,15 @@ const CommentSubmit = () => {
       </form>
     </div>
   );
+};
+
+// 날짜 생성 함수
+const dateFormatGenerator = () => {
+  const today = new Date();
+  const format = `${today.getFullYear()}-${
+    today.getMonth() + 1
+  }-${today.getDate()} T${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+  return format;
 };
 
 const StHorizonRule = styled.div`
