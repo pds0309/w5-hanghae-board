@@ -1,4 +1,5 @@
-import { __getPostById } from "../../lib/postApi";
+import { __getPostById, __getPosts } from "../../lib/postApi";
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -25,6 +26,7 @@ export const postSlice = createSlice({
     [__getPostById.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+    },
     [__getPosts.pending]: (state) => {
       state.isLoading = true; // 네트워크 요청이 시작되면 로딩상태를 true로 변경합니다.
     },
