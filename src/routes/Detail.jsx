@@ -3,18 +3,20 @@ import CommentSubmit from "../components/comment/CommentSubmit";
 import PostDetail from "../components/post/PostDetail";
 import Section from "../components/layout/Section";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 
 const Detail = () => {
+  const { id } = useParams();
   return (
     <Section>
       <StContainer>
         {/* #################################### 게시글 상세 ################################ */}
-        <PostDetail />
+        <PostDetail postId={id} />
         {/* #################################### 댓글등록 ################################ */}
         <br />
-        <CommentSubmit />
+        <CommentSubmit postId={id} />
         {/* #################################### 댓글목록 ################################ */}
-        <CommentList />
+        <CommentList postId={id} />
       </StContainer>
     </Section>
   );

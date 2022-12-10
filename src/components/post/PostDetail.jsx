@@ -1,35 +1,49 @@
+import { useDispatch, useSelector } from "react-redux";
+
 import Button from "../common/Button";
 import { Colors } from "../../styles";
+import { __getPostById } from "../../lib/postApi";
 import styled from "styled-components";
+import { useEffect } from "react";
 
-const PostDetail = () => {
+const PostDetail = ({ postId }) => {
+  const dispatch = useDispatch();
+  const { post, isLoading, error } = useSelector((state) => state.posts);
+
+  useEffect(() => {
+    dispatch(__getPostById({ id: postId }));
+  }, [dispatch, postId]);
+
+  if (isLoading) {
+    return <StStatusContainer>...loading</StStatusContainer>;
+  }
+  if (error) {
+    return <StStatusContainer>{error.message}</StStatusContainer>;
+  }
+
   return (
     <div>
-      <h1>
-        매력적인 성배님의 웃음소리는 내 마음속 한줄기의 빛이 되어 나의 심금을
-        울렸다.
-      </h1>
-      <StWriteInfoBox>
-        <p>
-          <span style={{ color: Colors.grey }}>작성자:&nbsp;</span>
-          이름이몇글자까지될까나
-        </p>
-        <p style={{ color: Colors.grey }}>2022/11/30 12: 27</p>
-      </StWriteInfoBox>
-      <StHorizonRule />
-      <div style={{ minHeight: "300px" }}>
-        <p style={{ lineHeight: "180%" }}>
-          내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물
-          <br />
-          내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물내용물
-          <br />
-          내용물 맛있는 물
-          <br />
-          <br />
-          안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕
-          안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕
-        </p>
-      </div>
+      {post && (
+        <>
+          <h1>{post.title}</h1>
+          <StWriteInfoBox>
+            <p>
+              <span style={{ color: Colors.grey }}>작성자:&nbsp;</span>
+              {post.userId}
+            </p>
+            <p style={{ color: Colors.grey }}>
+              {post.createdAt
+                .substring(0, 19)
+                .replace(/-/g, "/")
+                .replace("T", " ")}
+            </p>
+          </StWriteInfoBox>
+          <StHorizonRule />
+          <div style={{ minHeight: "300px" }}>
+            <p style={{ lineHeight: "180%" }}>{post.content}</p>
+          </div>
+        </>
+      )}
       <StButtonsContainer>
         <Button btnTheme="secondary">수정하기</Button>
         <Button btnTheme="secondary">삭제하기</Button>
@@ -57,6 +71,10 @@ const StButtonsContainer = styled.div`
   grid-column-gap: 16px;
   grid-row-gap: 16px;
   padding: 16px;
+`;
+
+const StStatusContainer = styled.div`
+  min-height: 400px;
 `;
 
 export default PostDetail;
