@@ -30,6 +30,7 @@ const GeneralLists = () => {
       {posts.map((post) => {
         return (
           <Link
+            key={post.id}
             style={{ textDecoration: "none", color: "grey" }}
             to={`/${post.id}`}
           >
@@ -84,7 +85,7 @@ const StSpaceBtw = styled.div`
   color: grey;
 `;
 
-const StPaging = styled.p`
+const StPaging = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
