@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import Button from "../common/Button";
 import { Colors } from "../../styles";
+import PostDeleteModal from "./PostDeleteModal";
 import PostUpdateModal from "./PostUpdateModal";
 import { __getPostById } from "../../lib/postApi";
 import styled from "styled-components";
@@ -11,6 +12,7 @@ const PostDetail = ({ postId }) => {
   const dispatch = useDispatch();
   const { post, isLoading, error } = useSelector((state) => state.posts);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   useEffect(() => {
     dispatch(__getPostById({ id: postId }));
@@ -49,6 +51,11 @@ const PostDetail = ({ postId }) => {
             onClose={() => setUpdateModalVisible(false)}
             {...post}
           />
+          <PostDeleteModal
+            id={postId}
+            visible={deleteModalVisible}
+            onClose={() => setDeleteModalVisible(false)}
+          />
         </>
       )}
       <StButtonsContainer>
@@ -58,7 +65,12 @@ const PostDetail = ({ postId }) => {
         >
           수정하기
         </Button>
-        <Button btnTheme="secondary">삭제하기</Button>
+        <Button
+          btnTheme="secondary"
+          onClick={() => setDeleteModalVisible(true)}
+        >
+          삭제하기
+        </Button>
       </StButtonsContainer>
       <StHorizonRule />
     </div>
