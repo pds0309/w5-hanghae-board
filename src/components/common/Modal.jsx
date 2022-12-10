@@ -1,25 +1,33 @@
 import Button from "./Button";
+import { createPortal } from "react-dom";
 import styled from "styled-components";
+import useClickAway from "../../hooks/useClickAway";
 
 const Modal = ({ visible, title, children, onSubmit, onClose }) => {
+  const { ref } = useClickAway(onClose);
   const portalDiv = document.querySelector("#modal-root");
   if (!portalDiv) {
     return null;
   }
-
   return (
-    <Background visible={visible}>
-      <ModalBox>
-        <h3 style={{ textAlign: "center" }}>{title}</h3>
-        <div style={{ margin: "30px 0" }}>{children}</div>
-        <ButtonsBox>
-          {onSubmit && <Button>제출하기</Button>}
-          <Button btnTheme="secondary" onClick={onClose}>
-            뒤로가기
-          </Button>
-        </ButtonsBox>
-      </ModalBox>
-    </Background>
+    <>
+      {visible &&
+        createPortal(
+          <Background visible={visible}>
+            <ModalBox ref={ref}>
+              <h3 style={{ textAlign: "center" }}>{title}</h3>
+              <div style={{ margin: "30px 0" }}>{children}</div>
+              <ButtonsBox>
+                {onSubmit && <Button>제출하기</Button>}
+                <Button btnTheme="secondary" onClick={onClose}>
+                  뒤로가기
+                </Button>
+              </ButtonsBox>
+            </ModalBox>
+          </Background>,
+          portalDiv
+        )}
+    </>
   );
 };
 
