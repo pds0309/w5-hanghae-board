@@ -14,6 +14,18 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 //   }
 // );
 
+export const __getPosts = createAsyncThunk(
+  "getTodos",
+  async (payload, thunkAPI) => {
+    try {
+      const data = await axios.get("http://localhost:3001/posts");
+      return thunkAPI.fulfillWithValue(data.data);
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  }
+);
+
 export const __getPostById = createAsyncThunk(
   "getPostById",
   async (payload, thunkAPI) => {
