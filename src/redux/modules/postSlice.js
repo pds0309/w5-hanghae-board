@@ -1,20 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-export const __getPosts = createAsyncThunk(
-  "getTodos",
-  async (payload, thunkAPI) => {
-    try {
-      const data = await axios.get("http://localhost:3001/posts");
-      return thunkAPI.fulfillWithValue(data.data);
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e);
-    }
-  }
-);
+import { __getPostById } from "../../lib/postApi";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   posts: [],
+  post: null,
   isLoading: false,
   error: null,
 };
@@ -26,6 +15,16 @@ export const postSlice = createSlice({
     // TODO: 액션 정의
   },
   extraReducers: {
+    [__getPostById.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [__getPostById.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.post = action.payload;
+    },
+    [__getPostById.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
     [__getPosts.pending]: (state) => {
       state.isLoading = true; // 네트워크 요청이 시작되면 로딩상태를 true로 변경합니다.
     },
