@@ -61,3 +61,41 @@ export const __removeComment = createAsyncThunk(
     }
   }
 );
+
+// 댓글 수정
+export const __modifyComment = createAsyncThunk(
+  "modifyComment",
+  async (payload, thunkAPI) => {
+    try {
+      const { id, comment } = payload;
+      const response = await axios.patch(
+        `http://localhost:3001/comments/${id}`,
+        {
+          comment,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// 댓글 편집여부 토글
+export const __toggleEditComment = createAsyncThunk(
+  "toggleEditComment",
+  async (payload, thunkAPI) => {
+    try {
+      const { id, onEdit } = payload;
+      const response = await axios.patch(
+        `http://localhost:3001/comments/${id}`,
+        {
+          onEdit,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);

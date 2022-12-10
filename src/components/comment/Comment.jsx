@@ -1,12 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Colors } from "../../styles";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { __getCommentById, __removeComment } from "../../lib/commentApi";
+import { __removeComment, __toggleEditComment } from "../../lib/commentApi";
 import {
   removeComment,
-  setIsMofidy,
+  setIsModify,
   setIsRemove,
+  setOnEdit,
 } from "../../redux/modules/commentSlice";
 import Modal from "../common/Modal";
 import Input from "../common/Input";
@@ -14,22 +15,39 @@ import useInput from "../../hooks/useInput";
 
 const Comment = ({ commentInfo }) => {
   const dispatch = useDispatch();
-  let { isRemove } = useSelector((state) => state.comments);
-  const { id, postId, comment, createdAt, userId, password } = commentInfo;
+  let { isRemove, isModify } = useSelector((state) => state.comments);
+  const { id, postId, comment, createdAt, userId, password, onEdit } =
+    commentInfo;
   const [chkPassword, setChkPassword, onChangeChkPassword] = useInput("");
+  const [updateComment, setUpdateComment, onChangeUpdateComment] = useInput(
+    commentInfo.comment
+  );
   const [message, setMessage] = useState("");
 
-  // 수정여부 플래그 true
+  useEffect(() => {
+    dispatch(setIsRemove(false));
+    dispatch(setIsModify(false));
+    cancelCommentModify();
+  }, []);
+
+  // 삭제여부 플래그 true
   const showRemovePopup = () => {
     dispatch(setIsRemove(true));
   };
 
+  // 수정여부 플래그 true
+  const showModifyPopup = () => {
+    dispatch(setIsModify(true));
+  };
+
   // 팝업을 닫는다
   const onClose = useCallback(() => {
-    dispatch(setIsRemove(false));
+    dispatch(
+      isRemove ? setIsRemove(false) : isModify ? setIsModify(false) : ""
+    );
     setChkPassword("");
     setMessage("");
-  }, [dispatch, setChkPassword]);
+  }, [dispatch, setChkPassword, isModify, isRemove]);
 
   // 삭제 버튼 클릭 시
   const onRemove = useCallback(
@@ -57,6 +75,39 @@ const Comment = ({ commentInfo }) => {
     [id, password, chkPassword, setChkPassword, dispatch, onClose]
   );
 
+  // 수정 버튼 클릭 시 인풋박스를 활설화 시킨다.
+  const showModifyForm = (id) => {
+    console.log(id);
+    const modifyComment = {
+      id,
+      onEdit: true,
+    };
+    dispatch(__toggleEditComment(modifyComment)).then((response) => {
+      const { id, onEdit } = response.payload;
+      dispatch(setOnEdit({ id, onEdit }));
+    });
+  };
+
+  const hideModifyForm = () => {
+    setUpdateComment(commentInfo.comment);
+    cancelCommentModify();
+  };
+
+  const cancelCommentModify = () => {
+    const modifyComment = {
+      id,
+      onEdit: false,
+    };
+    dispatch(__toggleEditComment(modifyComment)).then((response) => {
+      const { id, onEdit } = response.payload;
+      dispatch(setOnEdit({ id, onEdit }));
+    });
+  };
+  // 저장 완료
+  const onSave = (id) => {
+    // dispatch(setOnEdit(false));
+  };
+
   return (
     <>
       <div>
@@ -65,25 +116,43 @@ const Comment = ({ commentInfo }) => {
             <StCommentName>{userId}</StCommentName>
             <StCommentDate>{createdAt}</StCommentDate>
             <div>
-              <StLink>수정</StLink>
+              {onEdit ? (
+                <>
+                  <StLink onClick={showModifyPopup}>저장</StLink>
+                  <StLink onClick={hideModifyForm}>취소</StLink>
+                </>
+              ) : (
+                <StLink onClick={() => showModifyForm(id)}>수정</StLink>
+              )}
+
               <StLink onClick={showRemovePopup}>삭제</StLink>
             </div>
           </div>
           <div>
-            <StCommentContent>{comment}</StCommentContent>
+            {onEdit ? (
+              <Input
+                type="text"
+                value={updateComment}
+                onChange={onChangeUpdateComment}
+              />
+            ) : (
+              <StCommentContent>{comment}</StCommentContent>
+            )}
           </div>
         </StCommentContainer>
         <StHorizonRule style={{ maxWidth: "800px" }} />
       </div>
+      {/* 모달 창을 재사용하기 위해 수정인지 삭제인지 판단한다 */}
       <Modal
-        visible={isRemove ? true : false}
+        visible={isRemove ? true : isModify ? true : false}
         title="비밀번호를 입력하세요."
         children={
           <>
             <div>
-              <label>비밀번호</label>
+              <p>비밀번호</p>
               <Input
                 type="password"
+                width="300px"
                 value={chkPassword}
                 onChange={onChangeChkPassword}
                 required
@@ -92,7 +161,7 @@ const Comment = ({ commentInfo }) => {
             <Message>{message}</Message>
           </>
         }
-        onSubmit={onRemove}
+        onSubmit={isRemove ? onRemove : onSave}
         onClose={onClose}
       />
     </>
