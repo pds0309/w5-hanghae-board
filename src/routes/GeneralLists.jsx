@@ -1,72 +1,49 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Section from "../components/layout/Section";
+import { __getPosts } from "../redux/modules/postSlice";
+import { Link } from "react-router-dom";
 
 const GeneralLists = () => {
+  const { error, isLoading, posts } = useSelector((store) => store.posts);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(__getPosts());
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <div>로딩 중....</div>;
+  }
+
+  if (error) {
+    return <div>{error.message}</div>;
+  }
+
   return (
     <Section>
       <StHeader>
         <StH1>전체글 목록</StH1>
       </StHeader>
       <hr />
-      <div>
-        <div>
-          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
-          <StSpaceBtw>
-            <StP>리스트1</StP>
-            <StP>2022/12/09/ 00: 00</StP>
-          </StSpaceBtw>
-          <hr />
-        </div>
-        <div>
-          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
-          <StSpaceBtw>
-            <StP>리스트1</StP>
-            <StP>2022/12/09/ 00: 00</StP>
-          </StSpaceBtw>
-          <hr />
-        </div>
-        <div>
-          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
-          <StSpaceBtw>
-            <StP>리스트1</StP>
-            <StP>2022/12/09/ 00: 00</StP>
-          </StSpaceBtw>
-          <hr />
-        </div>
-        <div>
-          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
-          <StSpaceBtw>
-            <StP>리스트1</StP>
-            <StP>2022/12/09/ 00: 00</StP>
-          </StSpaceBtw>
-          <hr />
-        </div>
-        <div>
-          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
-          <StSpaceBtw>
-            <StP>리스트1</StP>
-            <StP>2022/12/09/ 00: 00</StP>
-          </StSpaceBtw>
-          <hr />
-        </div>
-        <div>
-          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
-          <StSpaceBtw>
-            <StP>리스트1</StP>
-            <StP>2022/12/09/ 00: 00</StP>
-          </StSpaceBtw>
-          <hr />
-        </div>
-        <div>
-          <StP fontSize="20px">리스트는 몇글자까지 간으한가</StP>
-          <StSpaceBtw>
-            <StP>리스트1</StP>
-            <StP>2022/12/09/ 00: 00</StP>
-          </StSpaceBtw>
-          <hr />
-        </div>
-      </div>
+      {posts.map((post) => {
+        return (
+          <Link
+            style={{ textDecoration: "none", color: "grey" }}
+            to={`/${post.id}`}
+          >
+            <div style={{ cursor: "pointer" }}>
+              <StP fontSize="20px">{post.title}</StP>
+              <StSpaceBtw>
+                <StP>{post.content}</StP>
+                <StP>2022/12/09/ 00: 00</StP>
+              </StSpaceBtw>
+              <hr />
+            </div>
+          </Link>
+        );
+      })}
 
       <StPaging>
         <p>{`< `}</p>
