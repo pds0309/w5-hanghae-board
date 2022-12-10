@@ -1,14 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import Button from "../common/Button";
 import { Colors } from "../../styles";
+import PostUpdateModal from "./PostUpdateModal";
 import { __getPostById } from "../../lib/postApi";
 import styled from "styled-components";
-import { useEffect } from "react";
 
 const PostDetail = ({ postId }) => {
   const dispatch = useDispatch();
   const { post, isLoading, error } = useSelector((state) => state.posts);
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
 
   useEffect(() => {
     dispatch(__getPostById({ id: postId }));
@@ -42,10 +44,20 @@ const PostDetail = ({ postId }) => {
           <div style={{ minHeight: "300px" }}>
             <p style={{ lineHeight: "180%" }}>{post.content}</p>
           </div>
+          <PostUpdateModal
+            visible={updateModalVisible}
+            onClose={() => setUpdateModalVisible(false)}
+            {...post}
+          />
         </>
       )}
       <StButtonsContainer>
-        <Button btnTheme="secondary">수정하기</Button>
+        <Button
+          btnTheme="secondary"
+          onClick={() => setUpdateModalVisible(true)}
+        >
+          수정하기
+        </Button>
         <Button btnTheme="secondary">삭제하기</Button>
       </StButtonsContainer>
       <StHorizonRule />
