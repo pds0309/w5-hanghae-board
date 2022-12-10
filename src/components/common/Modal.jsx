@@ -18,7 +18,7 @@ const Modal = ({ visible, title, children, onSubmit, onClose }) => {
               <h3 style={{ textAlign: "center" }}>{title}</h3>
               <div style={{ margin: "30px 0" }}>{children}</div>
               <ButtonsBox>
-                {onSubmit && <Button>제출하기</Button>}
+                {onSubmit && <Button onClick={onSubmit}>제출하기</Button>}
                 <Button btnTheme="secondary" onClick={onClose}>
                   뒤로가기
                 </Button>
