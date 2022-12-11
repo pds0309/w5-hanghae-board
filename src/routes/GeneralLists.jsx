@@ -7,6 +7,7 @@ import { __getPosts } from "../lib/postApi";
 import styled from "styled-components";
 
 import Pagination from "../components/pagination/Pagination";
+import { getReadableDateByFormmatedDate } from "../utils/dateHandler";
 
 const GeneralLists = () => {
   const { error, isLoading, posts } = useSelector((store) => store.posts);
@@ -50,7 +51,7 @@ const GeneralLists = () => {
                   <StP fontSize="20px">{post.title}</StP>
                   <StSpaceBtw>
                     <StP>{post.content}</StP>
-                    <StP>2022/12/09/ 00: 00</StP>
+                    <StP>{getReadableDateByFormmatedDate(post.createdAt)}</StP>
                   </StSpaceBtw>
                 </div>
               </Link>
