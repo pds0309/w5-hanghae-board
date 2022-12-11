@@ -80,22 +80,3 @@ export const __modifyComment = createAsyncThunk(
     }
   }
 );
-
-// 댓글 편집여부 토글
-export const __toggleEditComment = createAsyncThunk(
-  "toggleEditComment",
-  async (payload, thunkAPI) => {
-    try {
-      const { id, onEdit } = payload;
-      const response = await axios.patch(
-        `http://localhost:3001/comments/${id}`,
-        {
-          onEdit,
-        }
-      );
-      return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);

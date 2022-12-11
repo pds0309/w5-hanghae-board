@@ -2,42 +2,39 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Colors } from "../../styles";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { __removeComment, __toggleEditComment } from "../../lib/commentApi";
-import {
-  removeComment,
-  setIsModify,
-  setIsRemove,
-  setOnEdit,
-} from "../../redux/modules/commentSlice";
+import { __removeComment } from "../../lib/commentApi";
+import { removeComment } from "../../redux/modules/commentSlice";
 import Modal from "../common/Modal";
 import Input from "../common/Input";
 import useInput from "../../hooks/useInput";
 
 const Comment = ({ commentInfo }) => {
+  const { comments } = useSelector((state) => state.comments);
   const dispatch = useDispatch();
-  let { isRemove, isModify } = useSelector((state) => state.comments);
-  const { id, postId, comment, createdAt, userId, password, onEdit } =
-    commentInfo;
+  const { id, postId, comment, createdAt, userId, password } = commentInfo;
   const [chkPassword, setChkPassword, onChangeChkPassword] = useInput("");
   const [updateComment, setUpdateComment, onChangeUpdateComment] = useInput(
     commentInfo.comment
   );
   const [message, setMessage] = useState("");
+  const [isRemove, setIsRemove] = useState(false);
+  const [isModify, setIsModify] = useState(false);
+  const [onEdit, setOnEdit] = useState(false);
 
   useEffect(() => {
-    dispatch(setIsRemove(false));
-    dispatch(setIsModify(false));
-    cancelCommentModify();
-  }, []);
+    setIsRemove(false);
+    setIsModify(false);
+    setOnEdit(false);
+  }, [comments]);
 
   // 삭제여부 플래그 true
   const showRemovePopup = () => {
-    dispatch(setIsRemove(true));
+    setIsRemove(true);
   };
 
   // 수정여부 플래그 true
   const showModifyPopup = () => {
-    dispatch(setIsModify(true));
+    setIsModify(true);
   };
 
   // 팝업을 닫는다
@@ -75,37 +72,19 @@ const Comment = ({ commentInfo }) => {
     [id, password, chkPassword, setChkPassword, dispatch, onClose]
   );
 
-  // 수정 버튼 클릭 시 인풋박스를 활설화 시킨다.
+  // 수정 버튼 클릭 시 인풋박스를 활성화 시킨다.
   const showModifyForm = (id) => {
-    console.log(id);
-    const modifyComment = {
-      id,
-      onEdit: true,
-    };
-    dispatch(__toggleEditComment(modifyComment)).then((response) => {
-      const { id, onEdit } = response.payload;
-      dispatch(setOnEdit({ id, onEdit }));
-    });
+    setOnEdit(true);
   };
 
   const hideModifyForm = () => {
     setUpdateComment(commentInfo.comment);
-    cancelCommentModify();
+    setOnEdit(false);
   };
 
-  const cancelCommentModify = () => {
-    const modifyComment = {
-      id,
-      onEdit: false,
-    };
-    dispatch(__toggleEditComment(modifyComment)).then((response) => {
-      const { id, onEdit } = response.payload;
-      dispatch(setOnEdit({ id, onEdit }));
-    });
-  };
   // 저장 완료
   const onSave = (id) => {
-    // dispatch(setOnEdit(false));
+    setOnEdit(false);
   };
 
   return (

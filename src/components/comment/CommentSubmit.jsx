@@ -22,7 +22,6 @@ const CommentSubmit = ({ postId }) => {
       comment,
       userId,
       password,
-      onEdit: false,
       createdAt: dateFormatGenerator(),
     };
     // 댓글 등록 API 요청
