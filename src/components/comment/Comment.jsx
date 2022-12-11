@@ -1,35 +1,50 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Colors } from "../../styles";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { __getCommentById, __removeComment } from "../../lib/commentApi";
-import {
-  removeComment,
-  setIsMofidy,
-  setIsRemove,
-} from "../../redux/modules/commentSlice";
+import { __removeComment } from "../../lib/commentApi";
+import { removeComment } from "../../redux/modules/commentSlice";
 import Modal from "../common/Modal";
 import Input from "../common/Input";
 import useInput from "../../hooks/useInput";
 
 const Comment = ({ commentInfo }) => {
+  const { comments } = useSelector((state) => state.comments);
   const dispatch = useDispatch();
-  let { isRemove } = useSelector((state) => state.comments);
   const { id, postId, comment, createdAt, userId, password } = commentInfo;
   const [chkPassword, setChkPassword, onChangeChkPassword] = useInput("");
+  const [updateComment, setUpdateComment, onChangeUpdateComment] = useInput(
+    commentInfo.comment
+  );
   const [message, setMessage] = useState("");
+  const [isRemove, setIsRemove] = useState(false);
+  const [isModify, setIsModify] = useState(false);
+  const [onEdit, setOnEdit] = useState(false);
+
+  useEffect(() => {
+    setIsRemove(false);
+    setIsModify(false);
+    setOnEdit(false);
+  }, [comments]);
+
+  // 삭제여부 플래그 true
+  const showRemovePopup = () => {
+    setIsRemove(true);
+  };
 
   // 수정여부 플래그 true
-  const showRemovePopup = () => {
-    dispatch(setIsRemove(true));
+  const showModifyPopup = () => {
+    setIsModify(true);
   };
 
   // 팝업을 닫는다
   const onClose = useCallback(() => {
-    dispatch(setIsRemove(false));
+    dispatch(
+      isRemove ? setIsRemove(false) : isModify ? setIsModify(false) : ""
+    );
     setChkPassword("");
     setMessage("");
-  }, [dispatch, setChkPassword]);
+  }, [dispatch, setChkPassword, isModify, isRemove]);
 
   // 삭제 버튼 클릭 시
   const onRemove = useCallback(
@@ -57,6 +72,21 @@ const Comment = ({ commentInfo }) => {
     [id, password, chkPassword, setChkPassword, dispatch, onClose]
   );
 
+  // 수정 버튼 클릭 시 인풋박스를 활성화 시킨다.
+  const showModifyForm = (id) => {
+    setOnEdit(true);
+  };
+
+  const hideModifyForm = () => {
+    setUpdateComment(commentInfo.comment);
+    setOnEdit(false);
+  };
+
+  // 저장 완료
+  const onSave = (id) => {
+    setOnEdit(false);
+  };
+
   return (
     <>
       <div>
@@ -65,25 +95,43 @@ const Comment = ({ commentInfo }) => {
             <StCommentName>{userId}</StCommentName>
             <StCommentDate>{createdAt}</StCommentDate>
             <div>
-              <StLink>수정</StLink>
+              {onEdit ? (
+                <>
+                  <StLink onClick={showModifyPopup}>저장</StLink>
+                  <StLink onClick={hideModifyForm}>취소</StLink>
+                </>
+              ) : (
+                <StLink onClick={() => showModifyForm(id)}>수정</StLink>
+              )}
+
               <StLink onClick={showRemovePopup}>삭제</StLink>
             </div>
           </div>
           <div>
-            <StCommentContent>{comment}</StCommentContent>
+            {onEdit ? (
+              <Input
+                type="text"
+                value={updateComment}
+                onChange={onChangeUpdateComment}
+              />
+            ) : (
+              <StCommentContent>{comment}</StCommentContent>
+            )}
           </div>
         </StCommentContainer>
         <StHorizonRule style={{ maxWidth: "800px" }} />
       </div>
+      {/* 모달 창을 재사용하기 위해 수정인지 삭제인지 판단한다 */}
       <Modal
-        visible={isRemove ? true : false}
+        visible={isRemove ? true : isModify ? true : false}
         title="비밀번호를 입력하세요."
         children={
           <>
             <div>
-              <label>비밀번호</label>
+              <p>비밀번호</p>
               <Input
                 type="password"
+                width="300px"
                 value={chkPassword}
                 onChange={onChangeChkPassword}
                 required
@@ -92,7 +140,7 @@ const Comment = ({ commentInfo }) => {
             <Message>{message}</Message>
           </>
         }
-        onSubmit={onRemove}
+        onSubmit={isRemove ? onRemove : onSave}
         onClose={onClose}
       />
     </>
