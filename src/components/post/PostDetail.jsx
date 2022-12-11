@@ -7,6 +7,7 @@ import PostDeleteModal from "./PostDeleteModal";
 import PostUpdateModal from "./PostUpdateModal";
 import { __getPostById } from "../../lib/postApi";
 import styled from "styled-components";
+import { getReadableDateByFormmatedDate } from "../../utils/dateHandler";
 
 const PostDetail = ({ postId }) => {
   const dispatch = useDispatch();
@@ -36,10 +37,7 @@ const PostDetail = ({ postId }) => {
               {post.userId}
             </p>
             <p style={{ color: Colors.grey }}>
-              {post.createdAt
-                .substring(0, 19)
-                .replace(/-/g, "/")
-                .replace("T", " ")}
+              {getReadableDateByFormmatedDate(post.createdAt)}
             </p>
           </StWriteInfoBox>
           <StHorizonRule />

@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { addComment } from "../../redux/modules/commentSlice";
 import { __addComment } from "../../lib/commentApi";
 import useInput from "../../hooks/useInput";
+import { dateFormatGenerator } from "../../utils/dateHandler";
 
 const CommentSubmit = ({ postId }) => {
   const dispatch = useDispatch();
@@ -82,15 +83,6 @@ const CommentSubmit = ({ postId }) => {
       </form>
     </div>
   );
-};
-
-// 날짜 생성 함수
-const dateFormatGenerator = () => {
-  const today = new Date();
-  const format = `${today.getFullYear()}-${
-    today.getMonth() + 1
-  }-${today.getDate()} T${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
-  return format;
 };
 
 const StHorizonRule = styled.div`
