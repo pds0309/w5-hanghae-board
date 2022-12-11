@@ -3,7 +3,7 @@ export const dateFormatGenerator = () => {
   const today = new Date();
   const format = `${today.getFullYear()}-${
     today.getMonth() + 1
-  }-${today.getDate()} T${setTimeLeftPadding(
+  }-${today.getDate()}T${setTimeLeftPadding(
     today.getHours()
   )}:${setTimeLeftPadding(today.getMinutes())}:${today.getSeconds()}`;
   return format;
@@ -14,5 +14,5 @@ function setTimeLeftPadding(num) {
 }
 
 export const getReadableDateByFormmatedDate = (formattedDate) => {
-  return formattedDate.replace(/-/g, "/").replace("T", " ");
+  return formattedDate.substring(0, 19).replace(/-/g, "/").replace("T", " ");
 };
