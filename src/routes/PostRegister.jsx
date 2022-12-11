@@ -5,6 +5,7 @@ import Button from "../components/common/Button";
 import Section from "../components/layout/Section";
 import { Colors } from "../styles/colors";
 import { useNavigate } from "react-router-dom";
+import { dateFormatGenerator } from "../utils/dateHandler";
 
 const Row = styled.div`
   margin: 35px 0;
@@ -48,8 +49,10 @@ const PostRegister = () => {
     } else if (!data.title || !data.content) {
       alert("제목과 내용을 입력해주세요");
     } else {
-      axios.post("http://localhost:3001/posts", data);
-
+      axios.post("http://localhost:3001/posts", {
+        ...data,
+        createdAt: dateFormatGenerator(),
+      });
       alert("등록이 완료되었습니다");
       navigate("/");
     }
