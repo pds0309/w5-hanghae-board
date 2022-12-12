@@ -8,6 +8,7 @@ import { addComment } from "../../redux/modules/commentSlice";
 import { __addComment } from "../../lib/commentApi";
 import useInput from "../../hooks/useInput";
 import { dateFormatGenerator } from "../../utils/dateHandler";
+import { useCallback } from "react";
 
 const CommentSubmit = ({ postId }) => {
   const dispatch = useDispatch();
@@ -15,32 +16,44 @@ const CommentSubmit = ({ postId }) => {
   const [password, setPassword, onChangePassword] = useInput("");
   const [comment, setComment, onChangeComment] = useInput("");
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-    const newComment = {
-      id: uuid(),
+  const onSubmit = useCallback(
+    (event) => {
+      event.preventDefault();
+      const newComment = {
+        id: uuid(),
+        postId,
+        comment,
+        userId,
+        password,
+        createdAt: dateFormatGenerator(),
+      };
+      // 댓글 등록 API 요청
+      dispatch(__addComment(newComment))
+        .then((response) => {
+          const comment = response.payload;
+          dispatch(addComment(comment));
+          // 입력 폼 초기화
+          setUserId("");
+          setPassword("");
+          setComment("");
+          // TODO: 컴포넌트로 alert창 만들기
+          alert("댓글 작성이 정상적으로 되었습니다.");
+        })
+        .catch((error) => {
+          throw error;
+        });
+    },
+    [
+      dispatch,
       postId,
       comment,
       userId,
       password,
-      createdAt: dateFormatGenerator(),
-    };
-    // 댓글 등록 API 요청
-    dispatch(__addComment(newComment))
-      .then((response) => {
-        const comment = response.payload;
-        dispatch(addComment(comment));
-        // 입력 폼 초기화
-        setUserId("");
-        setPassword("");
-        setComment("");
-        // TODO: 컴포넌트로 alert창 만들기
-        alert("댓글 작성이 정상적으로 되었습니다.");
-      })
-      .catch((error) => {
-        throw error;
-      });
-  };
+      setUserId,
+      setPassword,
+      setComment,
+    ]
+  );
 
   return (
     <div style={{ marginBottom: "60px" }}>
