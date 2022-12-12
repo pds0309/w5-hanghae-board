@@ -10,8 +10,6 @@ const useDispatchCommentApi = ({
   isRemove, // 삭제 플래그
   isModify, // 수정 플래그
   flagHandler, // 플래그 핸들러
-  msgHandler, // 메시지 핸들러
-  chkPwdHandler, // 패스워드 확인 핸들러
   editHandler, // 편집여부 핸들러
   onClose, // 팝업 종료
 }) => {
