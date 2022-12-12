@@ -75,7 +75,6 @@ const PostRegister = () => {
   function onChangePasswordCheck(e) {
     const userPasswordCheck = /^[A-Za-zㄱ-ㅎ가-힣0-9+]{4,16}$/;
     if (userPasswordCheck.test(e.target.value)) {
-      console.log("o");
       setData((prev) => ({ ...prev, password: e.target.value }));
     } else {
       setData((prev) => ({ ...prev, password: "" }));

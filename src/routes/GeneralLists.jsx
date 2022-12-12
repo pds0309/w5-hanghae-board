@@ -41,9 +41,8 @@ const GeneralLists = () => {
       <StPostsGroup>
         {currentPosts.map((post) => {
           return (
-            <div>
+            <div key={post.id}>
               <Link
-                key={post.id}
                 style={{ textDecoration: "none", color: "grey" }}
                 to={`/${post.id}`}
               >
