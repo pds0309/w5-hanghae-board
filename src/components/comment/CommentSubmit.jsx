@@ -28,20 +28,12 @@ const CommentSubmit = ({ postId }) => {
         createdAt: dateFormatGenerator(),
       };
       // 댓글 등록 API 요청
-      dispatch(__addComment(newComment))
-        .then((response) => {
-          const comment = response.payload;
-          dispatch(addComment(comment));
-          // 입력 폼 초기화
-          setUserId("");
-          setPassword("");
-          setComment("");
-          // TODO: 컴포넌트로 alert창 만들기
-          alert("댓글 작성이 정상적으로 되었습니다.");
-        })
-        .catch((error) => {
-          throw error;
-        });
+      dispatch(__addComment(newComment));
+      dispatch(addComment(newComment));
+      // 입력 폼 초기화
+      setUserId("");
+      setPassword("");
+      setComment("");
     },
     [
       dispatch,
