@@ -9,7 +9,7 @@ import useDispatchCommentApi from "../../hooks/useDispatchCommentApi";
 import useShowPopup from "../../hooks/useShowPopup";
 
 const Comment = ({ commentInfo }) => {
-  const { comments, error } = useSelector((state) => state.comments);
+  const { comments } = useSelector((state) => state.comments);
   const { id, comment, createdAt, userId } = commentInfo;
   const [chkPassword, setChkPassword, onChangeChkPassword] = useInput("");
   const [updateComment, setUpdateComment, onChangeUpdateComment] = useInput(
