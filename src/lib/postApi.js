@@ -54,7 +54,9 @@ export const __deletePost = createAsyncThunk(
   "deletePost",
   async (payload, thunkAPI) => {
     try {
-      await axios.delete(`http://localhost:3001/posts/${payload.id}`, payload);
+      await axios.delete(`http://localhost:3001/posts/${payload.id}`, {
+        data: { ...payload },
+      });
       return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
