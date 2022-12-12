@@ -73,15 +73,15 @@ const Comment = ({ commentInfo }) => {
   });
 
   // 수정 버튼 클릭 시 인풋박스를 활성화 시킨다.
-  const showModifyForm = () => {
+  const showModifyForm = useCallback(() => {
     setOnEdit(true);
-  };
+  }, [setOnEdit]);
 
   // 취소 버튼 클릭 시 인풋박스를 비활성화 시키고 입력한 내용을 원복한다.
-  const hideModifyForm = () => {
+  const hideModifyForm = useCallback(() => {
     setUpdateComment(commentInfo.comment);
     setOnEdit(false);
-  };
+  }, [setUpdateComment, commentInfo.comment, setOnEdit]);
 
   return (
     <>
