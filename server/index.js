@@ -1,4 +1,3 @@
-const { Console } = require("console");
 const jsonServer = require("json-server");
 const path = require("path");
 const url = require("url");
