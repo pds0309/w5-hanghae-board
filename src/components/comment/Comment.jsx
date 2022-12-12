@@ -9,8 +9,8 @@ import useDispatchCommentApi from "../../hooks/useDispatchCommentApi";
 import useShowPopup from "../../hooks/useShowPopup";
 
 const Comment = ({ commentInfo }) => {
-  const { comments } = useSelector((state) => state.comments);
-  const { id, comment, createdAt, userId, password } = commentInfo;
+  const { comments, error } = useSelector((state) => state.comments);
+  const { id, comment, createdAt, userId } = commentInfo;
   const [chkPassword, setChkPassword, onChangeChkPassword] = useInput("");
   const [updateComment, setUpdateComment, onChangeUpdateComment] = useInput(
     commentInfo.comment
@@ -48,12 +48,9 @@ const Comment = ({ commentInfo }) => {
   const onRemove = useDispatchCommentApi({
     id,
     chkPwd: chkPassword,
-    pwd: password,
     isRemove: true,
     isModify: false,
     flagHandler: setIsRemove,
-    msgHandler: setMessage,
-    chkPwdHandler: setChkPassword,
     onClose,
   });
 
@@ -62,12 +59,9 @@ const Comment = ({ commentInfo }) => {
     id,
     updateComment,
     chkPwd: chkPassword,
-    pwd: password,
     isRemove: false,
     isModify: true,
     flagHandler: setIsModify,
-    msgHandler: setMessage,
-    chkPwdHandler: setChkPassword,
     editHandler: setOnEdit,
     onClose,
   });
