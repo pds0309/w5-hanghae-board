@@ -1,12 +1,16 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Header = () => {
   return (
     <HeaderSection>
       <HeaderContainer>
-        <p>HOME</p>
-        {/* TODO: 게시글 작성 페이지로 링크 추가 */}
-        <p>글쓰기</p>
+        <Link to="/">
+          <p>HOME</p>
+        </Link>
+        <Link to="/regist">
+          <p>글쓰기</p>
+        </Link>
       </HeaderContainer>
     </HeaderSection>
   );
@@ -22,6 +26,11 @@ const HeaderContainer = styled.div`
 
   & > p {
     font-weight: 700;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
   }
 `;
 
