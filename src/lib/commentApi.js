@@ -67,11 +67,11 @@ export const __modifyComment = createAsyncThunk(
   "modifyComment",
   async (payload, thunkAPI) => {
     try {
-      const response = await axios.patch(
+      await axios.patch(
         `http://localhost:3001/comments/${payload.id}`,
         payload
       );
-      return response.data;
+      return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
