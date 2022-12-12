@@ -1,17 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Colors } from "../../styles";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { __removeComment } from "../../lib/commentApi";
-import { removeComment } from "../../redux/modules/commentSlice";
+import { useSelector } from "react-redux";
 import Modal from "../common/Modal";
 import Input from "../common/Input";
 import useInput from "../../hooks/useInput";
+import useDispatchCommentApi from "../../hooks/useDispatchCommentApi";
+import useShowPopup from "../../hooks/useShowPopup";
 
 const Comment = ({ commentInfo }) => {
   const { comments } = useSelector((state) => state.comments);
-  const dispatch = useDispatch();
-  const { id, postId, comment, createdAt, userId, password } = commentInfo;
+  const { id, comment, createdAt, userId, password } = commentInfo;
   const [chkPassword, setChkPassword, onChangeChkPassword] = useInput("");
   const [updateComment, setUpdateComment, onChangeUpdateComment] = useInput(
     commentInfo.comment
@@ -28,62 +27,59 @@ const Comment = ({ commentInfo }) => {
   }, [comments]);
 
   // 삭제여부 플래그 true
-  const showRemovePopup = () => {
-    setIsRemove(true);
-  };
+  const showRemovePopup = useShowPopup(setMessage, setChkPassword, setIsRemove);
 
   // 수정여부 플래그 true
-  const showModifyPopup = () => {
-    setIsModify(true);
-  };
+  const showModifyPopup = useShowPopup(setMessage, setChkPassword, setIsModify);
 
   // 팝업을 닫는다
   const onClose = useCallback(() => {
-    dispatch(
-      isRemove ? setIsRemove(false) : isModify ? setIsModify(false) : ""
-    );
+    if (isRemove) {
+      setIsRemove(false);
+    } else if (isModify) {
+      setIsModify(false);
+    }
+
     setChkPassword("");
     setMessage("");
-  }, [dispatch, setChkPassword, isModify, isRemove]);
+  }, [setChkPassword, isModify, isRemove]);
 
   // 삭제 버튼 클릭 시
-  const onRemove = useCallback(
-    (event) => {
-      event.preventDefault();
-      // 입력값을 확인한다.
-      if (chkPassword === "") {
-        setIsRemove(true); // 팝업을 계속 띄운다.
-      } else {
-        // 비밀번호 확인
-        if (password !== chkPassword) {
-          setMessage("비밀번호가 다릅니다.");
-          setChkPassword("");
-        } else {
-          // 비밀번호가 같으면 삭제한다.
-          // 댓글 삭제 API 요청
-          dispatch(__removeComment(id)).then(() => {
-            alert("댓글이 정상적으로 삭제되었습니다.");
-            dispatch(removeComment(id)); // 화면의 댓글 목록 데이터 동기화
-            onClose();
-          });
-        }
-      }
-    },
-    [id, password, chkPassword, setChkPassword, dispatch, onClose]
-  );
+  const onRemove = useDispatchCommentApi({
+    id,
+    chkPwd: chkPassword,
+    pwd: password,
+    isRemove: true,
+    isModify: false,
+    flagHandler: setIsRemove,
+    msgHandler: setMessage,
+    chkPwdHandler: setChkPassword,
+    onClose,
+  });
+
+  // 저장 버튼 클릭 시
+  const onSave = useDispatchCommentApi({
+    id,
+    updateComment,
+    chkPwd: chkPassword,
+    pwd: password,
+    isRemove: false,
+    isModify: true,
+    flagHandler: setIsModify,
+    msgHandler: setMessage,
+    chkPwdHandler: setChkPassword,
+    editHandler: setOnEdit,
+    onClose,
+  });
 
   // 수정 버튼 클릭 시 인풋박스를 활성화 시킨다.
-  const showModifyForm = (id) => {
+  const showModifyForm = () => {
     setOnEdit(true);
   };
 
+  // 취소 버튼 클릭 시 인풋박스를 비활성화 시키고 입력한 내용을 원복한다.
   const hideModifyForm = () => {
     setUpdateComment(commentInfo.comment);
-    setOnEdit(false);
-  };
-
-  // 저장 완료
-  const onSave = (id) => {
     setOnEdit(false);
   };
 
@@ -101,7 +97,7 @@ const Comment = ({ commentInfo }) => {
                   <StLink onClick={hideModifyForm}>취소</StLink>
                 </>
               ) : (
-                <StLink onClick={() => showModifyForm(id)}>수정</StLink>
+                <StLink onClick={showModifyForm}>수정</StLink>
               )}
 
               <StLink onClick={showRemovePopup}>삭제</StLink>
