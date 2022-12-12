@@ -3,6 +3,7 @@ import {
   __addComment,
   __getCommentById,
   __getComments,
+  __modifyComment,
   __removeComment,
 } from "../../lib/commentApi";
 
@@ -25,6 +26,13 @@ export const commentSlice = createSlice({
     removeComment: (state, action) => {
       state.comments = state.comments.filter(
         (comment) => comment.id !== action.payload
+      );
+    },
+    // 댓글 수정
+    modifyComment: (state, action) => {
+      const { id, comment } = action.payload;
+      state.comments = state.comments.map((commentInfo) =>
+        commentInfo.id === id ? { ...commentInfo, comment } : commentInfo
       );
     },
   },
@@ -55,6 +63,10 @@ export const commentSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    [__modifyComment.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
     [__removeComment.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
@@ -62,6 +74,7 @@ export const commentSlice = createSlice({
   },
 });
 
-export const { addComment, removeComment } = commentSlice.actions;
+export const { addComment, removeComment, modifyComment } =
+  commentSlice.actions;
 
 export default commentSlice;
