@@ -9,8 +9,8 @@ function App() {
   return (
     // TODO: redux Provider 감싸기
     <>
-      <Header />
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route exact path="/:id" element={<Detail />}></Route>
           <Route path="/regist" element={<PostRegister />} />
