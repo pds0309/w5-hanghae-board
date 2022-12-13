@@ -32,7 +32,7 @@ server.get("/posts/:id", (req, res) => {
     (post) => post.id.toString() === id
   );
   return response
-    ? res.jsonp(response)
+    ? res.jsonp(filteredPasswordObj(response))
     : res.status(404).send({ message: "해당 데이터를 찾을 수 없습니다" });
 });
 
