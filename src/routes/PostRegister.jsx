@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../components/instance/axiosPostInstance";
 import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "../components/common/Button";
@@ -49,7 +49,7 @@ const PostRegister = () => {
     } else if (!data.title || !data.content) {
       alert("제목과 내용을 입력해주세요");
     } else {
-      axios.post("http://localhost:3001/posts", {
+      axios.post("", {
         ...data,
         createdAt: dateFormatGenerator(),
       });

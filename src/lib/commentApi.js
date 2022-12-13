@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../components/instance/axiosCommentInstance";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // 댓글 목록 조회
@@ -6,9 +6,7 @@ export const __getComments = createAsyncThunk(
   "getComments",
   async (payload, thunkAPI) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3001/comments/?postId=${payload}`
-      );
+      const response = await axios.get(`/?postId=${payload}`);
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -21,9 +19,7 @@ export const __getCommentById = createAsyncThunk(
   "getCommentById",
   async (payload, thunkAPI) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3001/comments/${payload}`
-      );
+      const response = await axios.get(`/${payload}`);
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -36,10 +32,7 @@ export const __addComment = createAsyncThunk(
   "addComment",
   async (payload, thunkAPI) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3001/comments",
-        payload
-      );
+      const response = await axios.post("", payload);
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -52,7 +45,7 @@ export const __removeComment = createAsyncThunk(
   "removeComment",
   async (payload, thunkAPI) => {
     try {
-      await axios.delete(`http://localhost:3001/comments/${payload.id}`, {
+      await axios.delete(`/${payload.id}`, {
         data: { ...payload },
       });
       return thunkAPI.fulfillWithValue(payload);
@@ -67,10 +60,7 @@ export const __modifyComment = createAsyncThunk(
   "modifyComment",
   async (payload, thunkAPI) => {
     try {
-      await axios.patch(
-        `http://localhost:3001/comments/${payload.id}`,
-        payload
-      );
+      await axios.patch(`/${payload.id}`, payload);
       return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
