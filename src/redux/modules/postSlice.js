@@ -28,6 +28,9 @@ export const postSlice = createSlice({
       state.deleteSuccess = false;
       state.error = null;
     },
+    clearError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: {
     [__getPostById.pending]: (state) => {
@@ -80,6 +83,7 @@ export const postSlice = createSlice({
   },
 });
 
-export const { initUpdateSuccess, initDeleteSuccess } = postSlice.actions;
+export const { initUpdateSuccess, initDeleteSuccess, clearError } =
+  postSlice.actions;
 
 export default postSlice;

@@ -8,6 +8,7 @@ import PostUpdateModal from "./PostUpdateModal";
 import { __getPostById } from "../../lib/postApi";
 import styled from "styled-components";
 import { getReadableDateByFormmatedDate } from "../../utils/dateHandler";
+import { clearError } from "../../redux/modules/postSlice";
 
 const PostDetail = ({ postId }) => {
   const dispatch = useDispatch();
@@ -18,6 +19,12 @@ const PostDetail = ({ postId }) => {
   useEffect(() => {
     dispatch(__getPostById({ id: postId }));
   }, [dispatch, postId]);
+
+  useEffect(() => {
+    if (error) {
+      return () => dispatch(clearError());
+    }
+  }, [error, dispatch]);
 
   if (isLoading) {
     return <StStatusContainer>...loading</StStatusContainer>;
