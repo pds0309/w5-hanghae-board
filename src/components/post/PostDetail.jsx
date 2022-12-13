@@ -22,7 +22,7 @@ const PostDetail = ({ postId }) => {
   if (isLoading) {
     return <StStatusContainer>...loading</StStatusContainer>;
   }
-  if (error) {
+  if (error?.status === 404) {
     return <StStatusContainer>{error.message}</StStatusContainer>;
   }
 
@@ -44,16 +44,20 @@ const PostDetail = ({ postId }) => {
           <div style={{ minHeight: "300px" }}>
             <p style={{ lineHeight: "180%" }}>{post.content}</p>
           </div>
-          <PostUpdateModal
-            visible={updateModalVisible}
-            onClose={() => setUpdateModalVisible(false)}
-            {...post}
-          />
-          <PostDeleteModal
-            id={postId}
-            visible={deleteModalVisible}
-            onClose={() => setDeleteModalVisible(false)}
-          />
+          {updateModalVisible && (
+            <PostUpdateModal
+              visible={updateModalVisible}
+              onClose={() => setUpdateModalVisible(false)}
+              {...post}
+            />
+          )}
+          {deleteModalVisible && (
+            <PostDeleteModal
+              id={postId}
+              visible={deleteModalVisible}
+              onClose={() => setDeleteModalVisible(false)}
+            />
+          )}
         </>
       )}
       <StButtonsContainer>
