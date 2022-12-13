@@ -8,6 +8,7 @@ import PostUpdateModal from "./PostUpdateModal";
 import { __getPostById } from "../../lib/postApi";
 import styled from "styled-components";
 import { getReadableDateByFormmatedDate } from "../../utils/dateHandler";
+import { clearError } from "../../redux/modules/postSlice";
 
 const PostDetail = ({ postId }) => {
   const dispatch = useDispatch();
@@ -19,10 +20,16 @@ const PostDetail = ({ postId }) => {
     dispatch(__getPostById({ id: postId }));
   }, [dispatch, postId]);
 
+  useEffect(() => {
+    if (error) {
+      return () => dispatch(clearError());
+    }
+  }, [error, dispatch]);
+
   if (isLoading) {
     return <StStatusContainer>...loading</StStatusContainer>;
   }
-  if (error) {
+  if (error?.status === 404) {
     return <StStatusContainer>{error.message}</StStatusContainer>;
   }
 
@@ -44,16 +51,20 @@ const PostDetail = ({ postId }) => {
           <div style={{ minHeight: "300px" }}>
             <p style={{ lineHeight: "180%" }}>{post.content}</p>
           </div>
-          <PostUpdateModal
-            visible={updateModalVisible}
-            onClose={() => setUpdateModalVisible(false)}
-            {...post}
-          />
-          <PostDeleteModal
-            id={postId}
-            visible={deleteModalVisible}
-            onClose={() => setDeleteModalVisible(false)}
-          />
+          {updateModalVisible && (
+            <PostUpdateModal
+              visible={updateModalVisible}
+              onClose={() => setUpdateModalVisible(false)}
+              {...post}
+            />
+          )}
+          {deleteModalVisible && (
+            <PostDeleteModal
+              id={postId}
+              visible={deleteModalVisible}
+              onClose={() => setDeleteModalVisible(false)}
+            />
+          )}
         </>
       )}
       <StButtonsContainer>

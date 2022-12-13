@@ -11,6 +11,8 @@ const initialState = {
   posts: [],
   post: null,
   isLoading: false,
+  updateSuccess: false,
+  deleteSuccess: false,
   error: null,
 };
 
@@ -18,7 +20,17 @@ export const postSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    // TODO: 액션 정의
+    initUpdateSuccess: (state) => {
+      state.updateSuccess = false;
+      state.error = null;
+    },
+    initDeleteSuccess: (state) => {
+      state.deleteSuccess = false;
+      state.error = null;
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: {
     [__getPostById.pending]: (state) => {
@@ -49,25 +61,29 @@ export const postSlice = createSlice({
     [__updatePost.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.post = { ...state.post, ...action.payload };
+      state.updateSuccess = true;
     },
     [__updatePost.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      state.updateSuccess = false;
     },
     [__deletePost.pending]: (state) => {
       state.isLoading = true;
     },
     [__deletePost.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.post = null;
+      state.deleteSuccess = true;
     },
     [__deletePost.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      state.deleteSuccess = false;
     },
   },
 });
 
-export const {} = postSlice.actions;
+export const { initUpdateSuccess, initDeleteSuccess, clearError } =
+  postSlice.actions;
 
 export default postSlice;

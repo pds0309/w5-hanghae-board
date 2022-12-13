@@ -1,23 +1,38 @@
 import Input from "../common/Input";
 import Modal from "../common/Modal";
 import { __deletePost } from "../../lib/postApi";
-import { async } from "q";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
 import useInput from "../../hooks/useInput";
 import { useNavigate } from "react-router";
+import useReduxModification from "../../hooks/useReduxModification";
+import { initDeleteSuccess } from "../../redux/modules/postSlice";
+import { useEffect } from "react";
 
 const PostDeleteModal = ({ onClose, visible, id }) => {
   const [password, , changePassword] = useInput("");
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { deleteSuccess, error, dispatcher } = useReduxModification(
+    __deletePost({ id: id, password: password }),
+    "posts",
+    initDeleteSuccess
+  );
+
+  useEffect(() => {
+    if (error && !deleteSuccess) {
+      alert(error.message);
+      return;
+    }
+    if (deleteSuccess) {
+      navigate(-1);
+    }
+  }, [deleteSuccess, error, onClose, navigate]);
+
   const handleSubmit = () => {
     if (!password) {
       alert("비밀번호를 입력하세요");
       return;
     }
-    dispatch(__deletePost({ id: id, password: password }));
-    navigate(-1);
+    dispatcher();
   };
 
   return (
