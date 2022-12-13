@@ -3,14 +3,33 @@ import Input from "../common/Input";
 import Modal from "../common/Modal";
 import { __updatePost } from "../../lib/postApi";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
 import useInput from "../../hooks/useInput";
+import useReduxModification from "../../hooks/useReduxModification";
+import { initUpdateSuccess } from "../../redux/modules/postSlice";
+import { useEffect } from "react";
 
 const PostUpdateModal = ({ onClose, visible, id, title, content }) => {
   const [inputTitle, , changeInputTitle] = useInput(title);
   const [inputContent, , changeInputContent] = useInput(content);
   const [password, , changePassword] = useInput("");
-  const dispatch = useDispatch();
+  const { updateSuccess, error, dispatcher } = useReduxModification(
+    __updatePost({
+      id: id,
+      title: inputTitle,
+      content: inputContent,
+      password,
+    }),
+    "posts",
+    initUpdateSuccess
+  );
+
+  useEffect(() => {
+    if (error && !updateSuccess) {
+      alert(error.message);
+      return;
+    }
+    updateSuccess && onClose();
+  }, [updateSuccess, error, onClose]);
 
   const handleSubmit = () => {
     if (!inputTitle || !inputContent) {
@@ -21,16 +40,9 @@ const PostUpdateModal = ({ onClose, visible, id, title, content }) => {
       alert("비밀번호를 입력하세요");
       return;
     }
-    dispatch(
-      __updatePost({
-        id: id,
-        title: inputTitle,
-        content: inputContent,
-        password,
-      })
-    );
-    onClose();
+    dispatcher();
   };
+
   return (
     <Modal
       title={"게시글 수정"}
