@@ -6,20 +6,7 @@ export const __getComments = createAsyncThunk(
   "getComments",
   async (payload, thunkAPI) => {
     try {
-      const response = await axios.get(`/?postId=${payload}`);
-      return thunkAPI.fulfillWithValue(response.data);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
-
-// 댓글 조회
-export const __getCommentById = createAsyncThunk(
-  "getCommentById",
-  async (payload, thunkAPI) => {
-    try {
-      const response = await axios.get(`/${payload}`);
+      const response = await axios.get(`/comments?postId=${payload}`);
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -32,7 +19,7 @@ export const __addComment = createAsyncThunk(
   "addComment",
   async (payload, thunkAPI) => {
     try {
-      const response = await axios.post("", payload);
+      const response = await axios.post("/comments", payload);
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -45,7 +32,7 @@ export const __removeComment = createAsyncThunk(
   "removeComment",
   async (payload, thunkAPI) => {
     try {
-      await axios.delete(`/${payload.id}`, {
+      await axios.delete(`/comments/${payload.id}`, {
         data: { ...payload },
       });
       return thunkAPI.fulfillWithValue(payload);
@@ -60,7 +47,7 @@ export const __modifyComment = createAsyncThunk(
   "modifyComment",
   async (payload, thunkAPI) => {
     try {
-      await axios.patch(`/${payload.id}`, payload);
+      await axios.patch(`/comments/${payload.id}`, payload);
       return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
