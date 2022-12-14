@@ -1,16 +1,18 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { __getComments } from "../../lib/commentApi";
 import { setResultMessage } from "../../redux/modules/commentSlice";
 import { Colors } from "../../styles";
 import Comment from "./Comment";
+import { useNavigate } from "react-router-dom";
 
 const CommentList = ({ postId }) => {
   const { comments, error, resultMessage } = useSelector(
     (state) => state.comments
   );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const showResultMessage = () => {
     if (resultMessage !== "") {
@@ -18,24 +20,25 @@ const CommentList = ({ postId }) => {
       dispatch(setResultMessage(""));
     }
   };
+
   useEffect(() => {
     dispatch(__getComments(postId));
   }, [dispatch, postId]);
 
+  if (error) {
+    navigate("../error", { state: { error } });
+  }
+
   return (
     <>
-      {error ? (
-        <Error>{`${resultMessage} [${error}]`}</Error>
-      ) : (
-        <div style={{ marginBottom: "60px" }}>
-          {resultMessage ? showResultMessage() : ""}
-          <StSectionInfo>전체댓글</StSectionInfo>
-          <StHorizonRule />
-          {comments.map((commentInfo) => (
-            <Comment key={commentInfo.id} commentInfo={commentInfo} />
-          ))}
-        </div>
-      )}
+      <div style={{ marginBottom: "60px" }}>
+        {resultMessage !== "" ? showResultMessage() : ""}
+        <StSectionInfo>전체댓글</StSectionInfo>
+        <StHorizonRule />
+        {comments.map((commentInfo) => (
+          <Comment key={commentInfo.id} commentInfo={commentInfo} />
+        ))}
+      </div>
     </>
   );
 };
@@ -50,10 +53,6 @@ const StHorizonRule = styled.div`
 const StSectionInfo = styled.h4`
   color: ${Colors.grey};
   margin-bottom: 10px;
-`;
-
-const Error = styled.span`
-  color: red;
 `;
 
 export default CommentList;
