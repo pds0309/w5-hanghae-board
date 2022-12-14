@@ -4,7 +4,6 @@ import Input from "../common/Input";
 import styled from "styled-components";
 import uuid from "react-uuid";
 import { useDispatch } from "react-redux";
-import { addComment } from "../../redux/modules/commentSlice";
 import { __addComment } from "../../lib/commentApi";
 import useInput from "../../hooks/useInput";
 import { dateFormatGenerator } from "../../utils/dateHandler";
@@ -29,11 +28,11 @@ const CommentSubmit = ({ postId }) => {
       };
       // 댓글 등록 API 요청
       dispatch(__addComment(newComment));
-      dispatch(addComment(newComment));
       // 입력 폼 초기화
       setUserId("");
       setPassword("");
       setComment("");
+      window.location.href = `/${postId}`;
     },
     [
       dispatch,

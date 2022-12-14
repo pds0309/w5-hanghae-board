@@ -1,13 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PostRegister from "./routes/PostRegister";
 import GeneralLists from "./routes/GeneralLists";
-
 import Detail from "./routes/Detail";
 import Header from "./components/layout/Header";
 
 function App() {
   return (
-    // TODO: redux Provider 감싸기
     <>
       <BrowserRouter>
         <Header />
