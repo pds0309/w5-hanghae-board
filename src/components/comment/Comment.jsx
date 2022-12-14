@@ -10,7 +10,7 @@ import useShowPopup from "../../hooks/useShowPopup";
 
 const Comment = ({ commentInfo }) => {
   const { comments } = useSelector((state) => state.comments);
-  const { id, comment, createdAt, userId, postId } = commentInfo;
+  const { id, comment, createdAt, userId } = commentInfo;
   const [chkPassword, setChkPassword, onChangeChkPassword] = useInput("");
   const [updateComment, setUpdateComment, onChangeUpdateComment] = useInput(
     commentInfo.comment
@@ -47,7 +47,6 @@ const Comment = ({ commentInfo }) => {
   // 삭제 버튼 클릭 시
   const onRemove = useDispatchCommentApi({
     id,
-    postId,
     chkPwd: chkPassword,
     isRemove: true,
     isModify: false,
@@ -58,7 +57,6 @@ const Comment = ({ commentInfo }) => {
   // 저장 버튼 클릭 시
   const onSave = useDispatchCommentApi({
     id,
-    postId,
     updateComment,
     chkPwd: chkPassword,
     isRemove: false,
