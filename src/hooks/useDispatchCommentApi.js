@@ -5,7 +5,6 @@ import { modifyComment, removeComment } from "../redux/modules/commentSlice";
 
 const useDispatchCommentApi = ({
   id, // 삭제 또는 수정할 댓글의 아이디
-  postId, // 게시물의 아이디
   updateComment, // 수정할 댓글[]
   chkPwd, // 사용자가 입력한 패스워드
   isRemove, // 삭제 플래그
