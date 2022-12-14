@@ -8,6 +8,7 @@ import { __addComment } from "../../lib/commentApi";
 import useInput from "../../hooks/useInput";
 import { dateFormatGenerator } from "../../utils/dateHandler";
 import { useCallback } from "react";
+import { addComment } from "../../redux/modules/commentSlice";
 
 const CommentSubmit = ({ postId }) => {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ const CommentSubmit = ({ postId }) => {
       setUserId("");
       setPassword("");
       setComment("");
-      window.location.href = `/${postId}`;
+      dispatch(addComment(newComment));
     },
     [
       dispatch,

@@ -21,23 +21,23 @@ const CommentList = ({ postId }) => {
   useEffect(() => {
     if (error !== null) dispatch(clearError()); // 에러 초기화
     dispatch(__getComments(postId)); // 데이터 조회
-  }, []);
+  }, [dispatch, error, postId]);
 
   useEffect(() => {
     if (deleteSuccess) {
       // 삭제 성공 시
       dispatch(initDeleteStatus()); // 삭제성공여부 플래그 초기화
-      navigate(0);
+      alert("정상적으로 삭제되었습니다.");
     }
     if (updateSuccess) {
       // 수정 성공 시
       dispatch(initUpdateStatus()); // 수정성공여부 플래그 초기화
-      navigate(0);
+      alert("정상적으로 수정되었습니다.");
     } else if (error !== null) {
       // 에러 발생 시
       alert(error); // 얼럿창 출력
       dispatch(clearError()); // 에러 초기화
-      window.location.href = `/${postId}`; // navigate로 하니 에러 초기화가 안됨
+      window.location.href = "/"; // navigate로 하니 에러 초기화가 안됨
     }
   }, [error, deleteSuccess, updateSuccess, dispatch, navigate, postId]);
 

@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   __addComment,
-  __getCommentById,
   __getComments,
   __modifyComment,
   __removeComment,
@@ -20,6 +19,23 @@ export const commentSlice = createSlice({
   name: "comments",
   initialState,
   reducers: {
+    // 댓글 등록
+    addComment: (state, action) => {
+      state.comments = [...state.comments, action.payload];
+    },
+    // 댓글 삭제
+    removeComment: (state, action) => {
+      state.comments = state.comments.filter(
+        (comment) => comment.id !== action.payload
+      );
+    },
+    // 댓글 수정
+    modifyComment: (state, action) => {
+      const { id, comment } = action.payload;
+      state.comments = state.comments.map((commentInfo) =>
+        commentInfo.id === id ? { ...commentInfo, comment } : commentInfo
+      );
+    },
     initUpdateStatus: (state) => {
       state.updateSuccess = false;
       state.error = null;
@@ -38,20 +54,9 @@ export const commentSlice = createSlice({
     },
     [__getComments.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.comments = action.payload;
+      state.comments = [...action.payload];
     },
     [__getComments.rejected]: (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
-    [__getCommentById.pending]: (state, action) => {
-      state.isLoading = true;
-    },
-    [__getCommentById.fulfilled]: (state, action) => {
-      state.isLoading = false;
-      state.comment = action.payload;
-    },
-    [__getCommentById.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
@@ -95,7 +100,13 @@ export const commentSlice = createSlice({
   },
 });
 
-export const { initUpdateStatus, initDeleteStatus, clearError } =
-  commentSlice.actions;
+export const {
+  addComment,
+  removeComment,
+  modifyComment,
+  initUpdateStatus,
+  initDeleteStatus,
+  clearError,
+} = commentSlice.actions;
 
 export default commentSlice;
