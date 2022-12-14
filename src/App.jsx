@@ -7,7 +7,6 @@ import Header from "./components/layout/Header";
 
 function App() {
   return (
-    // TODO: redux Provider 감싸기
     <>
       <BrowserRouter>
         <Header />

@@ -11,36 +11,25 @@ const initialState = {
   comments: [],
   comment: {},
   isLoading: false, // 서버에서 todos를 가져오는 상태를 나타내는 값
+  updateSuccess: false,
+  deleteSuccess: false,
   error: null, // 서버와의 통신이 실패한 경우
-  resultMessage: "",
 };
 
 export const commentSlice = createSlice({
   name: "comments",
   initialState,
   reducers: {
-    // 댓글 등록
-    addComment: (state, action) => {
-      state.comments = [...state.comments, action.payload];
+    initUpdateStatus: (state) => {
+      state.updateSuccess = false;
+      state.error = null;
     },
-    // 댓글 삭제
-    removeComment: (state, action) => {
-      state.comments = state.comments.filter(
-        (comment) => comment.id !== action.payload
-      );
+    initDeleteStatus: (state) => {
+      state.deleteSuccess = false;
+      state.error = null;
     },
-    // 댓글 수정
-    modifyComment: (state, action) => {
-      const { id, comment } = action.payload;
-      state.comments = state.comments.map((commentInfo) =>
-        commentInfo.id === id ? { ...commentInfo, comment } : commentInfo
-      );
-    },
-    setResultMessage: (state, action) => {
-      state.resultMessage = action.payload;
-    },
-    setError: (state, action) => {
-      state.error = action.payload;
+    clearError: (state) => {
+      state.error = null;
     },
   },
   extraReducers: {
@@ -72,13 +61,10 @@ export const commentSlice = createSlice({
     [__addComment.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.comments = [...state.comments];
-      state.resultMessage = "정상적으로 등록되었습니다.";
     },
     [__addComment.rejected]: (state, action) => {
-      const { status, data } = action.payload.response;
       state.isLoading = false;
-      state.error = `${status}에러 ${data.message}`;
-      state.resultMessage = "등록에 실패했습니다";
+      state.error = action.payload;
     },
     [__modifyComment.pending]: (state) => {
       state.isLoading = true;
@@ -86,13 +72,12 @@ export const commentSlice = createSlice({
     [__modifyComment.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.comment = { ...state.comment, ...action.payload };
-      state.resultMessage = "정상적으로 수정되었습니다.";
+      state.updateSuccess = true;
     },
     [__modifyComment.rejected]: (state, action) => {
-      const { status, data } = action.payload.response;
       state.isLoading = false;
-      state.error = `${status}에러 ${data.message}`;
-      state.resultMessage = "수정에 실패했습니다";
+      state.error = action.payload;
+      state.updateSuccess = false;
     },
     [__removeComment.pending]: (state) => {
       state.isLoading = true;
@@ -100,23 +85,17 @@ export const commentSlice = createSlice({
     [__removeComment.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.comment = null;
-      state.resultMessage = "정상적으로 삭제되었습니다.";
+      state.deleteSuccess = true;
     },
     [__removeComment.rejected]: (state, action) => {
-      const { status, data } = action.payload.response;
       state.isLoading = false;
-      state.error = `${status}에러 ${data.message}`;
-      state.resultMessage = "삭제에 실패했습니다";
+      state.error = action.payload;
+      state.deleteSuccess = false;
     },
   },
 });
 
-export const {
-  addComment,
-  removeComment,
-  modifyComment,
-  setResultMessage,
-  setError,
-} = commentSlice.actions;
+export const { initUpdateStatus, initDeleteStatus, clearError } =
+  commentSlice.actions;
 
 export default commentSlice;
